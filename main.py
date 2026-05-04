@@ -59,7 +59,6 @@ def display_records(table_frame, record_list):
         tk.Label(table_frame, text=rec["author"], borderwidth=1, relief="solid", padx=10, pady=5).grid(row=row, column=0, sticky="nsew")
         tk.Label(table_frame, text=str(rec["theme"]), borderwidth=1, relief="solid", padx=10, pady=5).grid(row=row, column=1, sticky="nsew")
         tk.Label(table_frame, text=rec["text"], borderwidth=1, relief="solid", padx=10, pady=5).grid(row=row, column=2, sticky="nsew")
-        tk.Label(table_frame, text=precip_text, borderwidth=1, relief="solid", padx=10, pady=5).grid(row=row, column=3, sticky="nsew")
     
     # Настройка веса столбцов
     for col in range(3):
@@ -82,11 +81,11 @@ def filter_records():
     
     # Фильтр по температуре (выше заданного порога)
     if current_filter_theme is not None:
-        filtered = [r for r in filtered if r["temperature"] > current_filter_theme]
+        filtered = [r for r in filtered if r["theme"] == current_filter_theme]
     
     return filtered
 
-def add_record(author_entry, theme_entry, desc_entry, precip_var, table_frame):
+def add_record(author_entry, theme_entry, desc_entry, table_frame):
     """Добавление новой записи о погоде"""
     author = author_entry.get().strip()
     theme = theme_entry.get().strip()
@@ -115,16 +114,15 @@ def add_record(author_entry, theme_entry, desc_entry, precip_var, table_frame):
     author_entry.delete(0, tk.END)
     theme_entry.delete(0, tk.END)
     desc_entry.delete(0, tk.END)
-    precip_var.set(False)
     
     status_label.config(text=f"Запись за добавлена!", fg="green")
     refresh_table(table_frame)
 
-def filter_by_date(filter_author_entry, table_frame):
+def filter_by_author(filter_author_entry, table_frame):
     """Фильтрация по автору"""
     global current_filter_author
     date_str = filter_author_entry.get().strip()
-    if date_str and not validate_date(date_str):
+    if not date_str:
         status_label.config(text="Ошибка: Неверный формат для фильтра!", fg="red")
         return
     current_filter_author = date_str
@@ -136,16 +134,15 @@ def filter_by_date(filter_author_entry, table_frame):
         status_label.config(text="Фильтр по автору сброшен", fg="blue")
 
 def filter_by_theme(filter_theme_entry, table_frame):
-    """Фильтрация по температуре (показать выше порога)"""
+    """Фильтрация по теме"""
     global current_filter_theme
     temp_str = filter_theme_entry.get().strip()
-    if temp_str:
-        if temp_str:
-            status_label.config(text="Ошибка: Поле пустое!", fg="red")
-            return
-        current_filter_theme = temp_str
+    if not temp_str:
+        status_label.config(text="Ошибка: Поле пустое!", fg="red")
+        return
+        
     else:
-        current_filter_theme = None
+        current_filter_theme = temp_str
     
     refresh_table(table_frame)
     
@@ -227,7 +224,7 @@ def main():
     button_frame.pack(fill="x", padx=10, pady=5)
     
     add_button = tk.Button(button_frame, text="ДОБАВИТЬ ЗАПИСЬ", bg="green", fg="white", font=("Arial", 10, "bold"),
-                          command=lambda: add_record(author_entry, theme_entry, desc_entry, precip_var, table_frame))
+                          command=lambda: add_record(author_entry, theme_entry, desc_entry, button_frame))
     add_button.pack(side="left", padx=5)
     
     delete_button = tk.Button(button_frame, text="УДАЛИТЬ ЗАПИСЬ", bg="red", fg="white", font=("Arial", 10, "bold"),
@@ -243,12 +240,12 @@ def main():
     tk.Label(filter_frame, text="По автору:", bg="#f0f0f0").grid(row=1, column=0, padx=5, pady=5, sticky="e")
     filter_author_entry = tk.Entry(filter_frame, width=15)
     filter_author_entry.grid(row=1, column=1, padx=5, pady=5)
-    tk.Button(filter_frame, text="Применить", command=lambda: filter_by_date(filter_author_entry, table_frame)).grid(row=1, column=2, padx=5)
+    tk.Button(filter_frame, text="Применить", command=lambda: filter_by_author(filter_author_entry, table_frame)).grid(row=1, column=2, padx=5)
     
     tk.Label(filter_frame, text="По теме:", bg="#f0f0f0").grid(row=2, column=0, padx=5, pady=5, sticky="e")
     filter_theme_entry = tk.Entry(filter_frame, width=10)
     filter_theme_entry.grid(row=2, column=1, padx=5, pady=5)
-    tk.Button(filter_frame, text="Применить", command=lambda: filter_by_temp(filter_theme_entry, table_frame)).grid(row=2, column=2, padx=5)
+    tk.Button(filter_frame, text="Применить", command=lambda: filter_by_theme(filter_theme_entry, table_frame)).grid(row=2, column=2, padx=5)
     
     tk.Button(filter_frame, text="СБРОСИТЬ ФИЛЬТРЫ", bg="orange", 
               command=lambda: reset_filters(filter_author_entry, filter_theme_entry, table_frame)).grid(row=1, column=3, rowspan=2, padx=20)
