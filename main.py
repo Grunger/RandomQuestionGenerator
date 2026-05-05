@@ -184,7 +184,7 @@ def delete_record(table_frame):
             save_data()
             refresh_table(table_frame)
             selection_window.destroy()
-            status_label.config(text=f"Запись за {deleted_rec['date']} удалена!", fg="red")
+            status_label.config(text=f"Запись удалена!", fg="red")
         else:
             status_label.config(text="Ошибка: Выберите запись для удаления!", fg="red")
     
@@ -228,7 +228,7 @@ def main():
     add_button.pack(side="left", padx=5)
     
     delete_button = tk.Button(button_frame, text="УДАЛИТЬ ЗАПИСЬ", bg="red", fg="white", font=("Arial", 10, "bold"),
-                            command=lambda: delete_record(table_frame))
+                            command=lambda: delete_record(button_frame))
     delete_button.pack(side="left", padx=5)
     
     # Фрейм для фильтрации
