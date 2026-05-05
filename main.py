@@ -224,11 +224,11 @@ def main():
     button_frame.pack(fill="x", padx=10, pady=5)
     
     add_button = tk.Button(button_frame, text="ДОБАВИТЬ ЗАПИСЬ", bg="green", fg="white", font=("Arial", 10, "bold"),
-                          command=lambda: add_record(author_entry, theme_entry, desc_entry, button_frame))
+                          command=lambda: add_record(author_entry, theme_entry, desc_entry, table_frame))
     add_button.pack(side="left", padx=5)
     
     delete_button = tk.Button(button_frame, text="УДАЛИТЬ ЗАПИСЬ", bg="red", fg="white", font=("Arial", 10, "bold"),
-                            command=lambda: delete_record(button_frame))
+                            command=lambda: delete_record(table_frame))
     delete_button.pack(side="left", padx=5)
     
     # Фрейм для фильтрации
@@ -240,15 +240,15 @@ def main():
     tk.Label(filter_frame, text="По автору:", bg="#f0f0f0").grid(row=1, column=0, padx=5, pady=5, sticky="e")
     filter_author_entry = tk.Entry(filter_frame, width=15)
     filter_author_entry.grid(row=1, column=1, padx=5, pady=5)
-    tk.Button(filter_frame, text="Применить", command=lambda: filter_by_author(filter_author_entry, table_frame)).grid(row=1, column=2, padx=5)
+    tk.Button(filter_frame, text="Применить", command=lambda: filter_by_author(filter_author_entry, filter_frame)).grid(row=1, column=2, padx=5)
     
     tk.Label(filter_frame, text="По теме:", bg="#f0f0f0").grid(row=2, column=0, padx=5, pady=5, sticky="e")
     filter_theme_entry = tk.Entry(filter_frame, width=10)
     filter_theme_entry.grid(row=2, column=1, padx=5, pady=5)
-    tk.Button(filter_frame, text="Применить", command=lambda: filter_by_theme(filter_theme_entry, table_frame)).grid(row=2, column=2, padx=5)
+    tk.Button(filter_frame, text="Применить", command=lambda: filter_by_theme(filter_theme_entry, filter_frame)).grid(row=2, column=2, padx=5)
     
     tk.Button(filter_frame, text="СБРОСИТЬ ФИЛЬТРЫ", bg="orange", 
-              command=lambda: reset_filters(filter_author_entry, filter_theme_entry, table_frame)).grid(row=1, column=3, rowspan=2, padx=20)
+              command=lambda: reset_filters(filter_author_entry, filter_theme_entry, filter_frame)).grid(row=1, column=3, rowspan=2, padx=20)
     
     # Статус бар
     status_label = tk.Label(root, text="Готов к работе", relief="sunken", anchor="w", bg="#ffffcc")
